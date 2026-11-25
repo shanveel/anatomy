@@ -68,8 +68,8 @@ hormones = re.sub(r'<h3 class="sub-h">.*?</h3>\s*', '', hormones).replace('<li>'
 health = block(r'<div class="health">.*?</div>\s*(?=<blockquote)')
 health = re.sub(r'<section aria-labelledby', '<section data-step aria-labelledby', health)
 quote = block(r'<blockquote class="closing">.*?</blockquote>')
-thumbs = re.findall(r'<img src="(assets/posters/[^"]+-400\.webp)"[^>]*alt="([^"]*)"', src)
-assert len(thumbs) >= 8, len(thumbs)
+thumbs = re.findall(r'<img src="(assets/posters/[^"]+-thumb-560\.webp)"[^>]*alt="([^"]*)"', src)
+assert len(thumbs) >= 1, len(thumbs)
 poster_wall = "\n".join(f'        <img src="{u}" alt="" loading="lazy" decoding="async">' for u, a in thumbs)
 n_posters = len(thumbs)
 

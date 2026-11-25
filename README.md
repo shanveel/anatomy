@@ -17,15 +17,15 @@ assets/
   css/site.css, present.css
   js/main.js, present.js, vendor/qrcode.min.js (MIT)
   fonts/two-cells-sans.woff2 (Atkinson Hyperlegible Next with an unslashed zero, SIL OFL 1.1)
-  posters/  the 11 exhibition posters: 400px thumbnails, full-size WebP for viewing,
-            the original JPEGs for download, and a ZIP of all of them
+  posters/  the 4 exhibition posters: the original JPEGs (downloaded as they are), plus AVIF and WebP
+            versions sized for thumbnails, phones and full screen, and a ZIP of the originals
 sw.js                 offline cache
 manifest.webmanifest  lets visitors add the site to their home screen
 ```
 
 The first visit downloads about 150 KB. The poster images load only when someone scrolls down to them.
 
-To add a poster, put its thumbnail, WebP and JPEG in `assets/posters/` with the same naming pattern, add a `<li>` to the `#gallery` list in `index.html`, and rebuild the ZIP.
+To add or swap a poster, put its JPEG in `assets/posters/`, list it in `tools/build_posters.py`, then run `python3 tools/build_posters.py && python3 tools/build_present.py`. That makes the optimised images, updates the gallery and the ZIP, and refreshes the presentation's poster slide.
 
 ## Publish on GitHub Pages
 

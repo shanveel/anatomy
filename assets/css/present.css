@@ -213,7 +213,7 @@ body.kiosk.show-ui { cursor: auto; }
 /* Posters: a wall of thumbnails with a QR to the gallery */
 .s-posters { grid-template-columns: 1.35fr .9fr; align-items: center; gap: 3rem; }
 .poster-wall { display: flex; flex-wrap: wrap; justify-content: center; gap: .9rem; }
-.poster-wall img { width: 6rem; aspect-ratio: 2 / 3; object-fit: cover; object-position: top; border-radius: .5rem; border: 1px solid var(--line); box-shadow: 0 .8rem 1.6rem -1rem rgb(0 0 0 / .8); }
+.poster-wall img { width: 9.5rem; aspect-ratio: 2 / 3; object-fit: cover; object-position: top; border-radius: .5rem; border: 1px solid var(--line); box-shadow: 0 .8rem 1.6rem -1rem rgb(0 0 0 / .8); }
 .poster-wall img:nth-child(odd) { transform: rotate(-2deg); }
 .poster-wall img:nth-child(even) { transform: rotate(2deg) translateY(.4rem); }
 .poster-cta h2 { font-size: 3.6rem; }

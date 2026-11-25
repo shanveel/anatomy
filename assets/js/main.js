@@ -400,19 +400,37 @@
     const links = $$("a", list);
     const img = $("#lb-img"), title = $("#lb-title"), count = $("#lb-count"), dl = $("#lb-download"), open = $("#lb-open");
     let i = 0, opener = null;
-    const preload = (k) => { const a = links[(k + links.length) % links.length]; if (a) new Image().src = a.dataset.full; };
+    const avif = $("#lb-avif");
+    // Warm the cache for the neighbours, in the format and size this browser will pick.
+    const preload = (k) => {
+      const a = links[(k + links.length) % links.length];
+      if (!a) return;
+      const pic = document.createElement("picture"), src = document.createElement("source"), im = new Image();
+      src.type = "image/avif"; src.srcset = a.dataset.avif; src.sizes = sizesAttr(a);
+      im.src = a.dataset.webp; pic.append(src, im);
+    };
+    // How wide the poster will be drawn: limited by the screen width and by the screen height.
+    const sizesAttr = (a) => `min(100vw, calc((100dvh - 6rem) * ${a.dataset.w} / ${a.dataset.h}))`;
     function show(k) {
       i = (k + links.length) % links.length;
       const a = links[i];
-      img.src = a.dataset.full;
+      // Show the (already loaded) thumbnail immediately, sized like the poster, then let the sharp image replace it.
+      img.removeAttribute("srcset");
+      img.width = +a.dataset.w; img.height = +a.dataset.h;
+      const thumb = a.querySelector("img");  // reuse whichever thumbnail file the gallery already loaded
+      img.style.backgroundImage = `url("${thumb.currentSrc || a.dataset.thumb}"), ${thumb.style.backgroundImage}`;
+      img.classList.remove("loaded");
+      avif.srcset = a.dataset.avif; avif.sizes = sizesAttr(a);
+      img.src = a.dataset.webp;
       img.alt = a.querySelector("img").alt;
       title.textContent = a.dataset.title;
       count.textContent = `${i + 1} of ${links.length}`;
       dl.href = a.getAttribute("href");
       dl.setAttribute("download", "from-two-cells-to-life-" + a.getAttribute("href").split("/").pop());
-      open.href = a.dataset.full;
+      open.href = a.getAttribute("href");
       preload(i + 1); preload(i - 1);
     }
+    img.addEventListener("load", () => img.classList.add("loaded"));
     list.addEventListener("click", (e) => {
       const a = e.target.closest("a");
       if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
@@ -464,6 +482,27 @@
     map.forEach((_, id) => { const s = document.getElementById(id); if (s) io.observe(s); });
   }
 
+  /* ---------------- Landing on a section link ---------------- */
+  // A link such as …/#posters should land on its section even if fonts or late content
+  // change the page height while it loads. Re-check once everything has settled, unless the
+  // visitor has already started scrolling, then turn on smooth scrolling for in-page links.
+  function initLanding() {
+    let touched = false;
+    const mark = () => (touched = true);
+    ["wheel", "touchstart", "keydown", "mousedown"].forEach((t) => addEventListener(t, mark, { once: true, passive: true }));
+    const settle = () => {
+      const id = decodeURIComponent(location.hash.slice(1));
+      const target = id && document.getElementById(id);
+      if (target && !touched) {
+        const off = target.getBoundingClientRect().top - (parseFloat(getComputedStyle(target).scrollMarginTop) || 0);
+        if (Math.abs(off) > 4) target.scrollIntoView({ block: "start" });
+      }
+      requestAnimationFrame(() => document.documentElement.classList.add("smooth"));
+    };
+    const ready = () => (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(settle);
+    if (document.readyState === "complete") ready(); else addEventListener("load", ready, { once: true });
+  }
+
   function initOffline() {
     if ("serviceWorker" in navigator && location.protocol === "https:") {
       addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
@@ -471,5 +510,5 @@
   }
 
   Object.assign(api, { qrSvg, siteUrl, isPublic, reduceMotion });
-  initOrgans(); initCycle(); initQuiz(); initQR(); initGallery(); initNav(); initOffline();
+  initOrgans(); initCycle(); initQuiz(); initQR(); initGallery(); initNav(); initLanding(); initOffline();
 })();

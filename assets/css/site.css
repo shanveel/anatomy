@@ -63,7 +63,9 @@
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
-@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+/* Smooth scrolling is switched on by main.js once the page has settled, so links opened from
+   outside (e.g. …/#posters) jump straight to their section instead of animating mid-load. */
+@media (prefers-reduced-motion: no-preference) { html.smooth { scroll-behavior: smooth; } }
 
 body {
   margin: 0;
@@ -144,12 +146,12 @@ button { font: inherit; color: inherit; }
 
 /* Hero entrance: the one orchestrated moment — sperm arrive, one reaches the zona. */
 @media (prefers-reduced-motion: no-preference) {
-  .swim { animation: swim 2.6s cubic-bezier(.2, .7, .25, 1) both; }
-  .swim.s2 { animation-delay: .25s; }
-  .swim.s3 { animation-delay: .45s; }
-  .swim.s4 { animation-delay: .1s; animation-duration: 3s; }
-  .swim.s5 { animation-delay: .6s; animation-duration: 3.2s; }
-  .glow { animation: glow 1.2s ease-out 2.3s both; }
+  .swim { animation: swim .9s cubic-bezier(.2, .7, .25, 1) both; }
+  .swim.s2 { animation-delay: .08s; }
+  .swim.s3 { animation-delay: .16s; }
+  .swim.s4 { animation-delay: .04s; animation-duration: 1s; }
+  .swim.s5 { animation-delay: .2s; animation-duration: 1.05s; }
+  .glow { animation: glow .5s ease-out .85s both; }
   @keyframes swim { from { transform: translate(-90px, 0); opacity: 0; } 25% { opacity: 1; } to { transform: none; opacity: 1; } }
   @keyframes glow { from { opacity: 0; } to { opacity: 1; } }
 }
@@ -539,9 +541,9 @@ h4 { font-size: 1.0625rem; line-height: 1.3; margin: 0 0 .3rem; }
 .closing p { margin: 0; font-size: clamp(1.5rem, 3.4vw, 2.25rem); line-height: 1.2; font-weight: 800; letter-spacing: -.02em; color: var(--hema); }
 
 /* Gallery */
-.gallery { list-style: none; padding: 0; margin: 2rem 0 0; display: grid; gap: 1.25rem 1rem; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); }
+.gallery { list-style: none; padding: 0; margin: 2rem 0 0; display: grid; gap: 1.5rem 1.25rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .gallery a { display: block; color: var(--ink); text-decoration: none; }
-.gallery img { width: 100%; height: auto; aspect-ratio: 2 / 3; object-fit: cover; object-position: top; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); transition: transform .2s, box-shadow .2s; }
+.gallery img { width: 100%; height: auto; aspect-ratio: 2 / 3; object-fit: cover; object-position: top; border-radius: 10px; border: 1px solid var(--line); background-color: var(--surface); background-size: cover; background-position: top; transition: transform .2s, box-shadow .2s; }
 .gallery a:hover img { transform: translateY(-3px); box-shadow: 0 10px 24px -14px rgb(29 26 46 / .5); }
 .gallery span { display: block; margin-top: .5rem; font-size: .9375rem; line-height: 1.35; }
 .gallery a:hover span { color: var(--eosin); }
@@ -562,7 +564,7 @@ h4 { font-size: 1.0625rem; line-height: 1.3; margin: 0 0 .3rem; }
 .lightbox .icon-btn { color: #f3effb; border-color: rgb(255 255 255 / .35); background: rgb(12 9 24 / .5); }
 .lightbox .icon-btn:hover { background: rgb(255 255 255 / .12); }
 .lb-stage { position: relative; min-height: 0; min-width: 0; display: grid; place-items: center; padding: 1rem; overflow: auto; }
-.lb-stage img { max-width: 100%; max-height: calc(100vh - 6rem); max-height: calc(100dvh - 6rem); width: auto; height: auto; border-radius: 6px; background: #fff; }
+.lb-stage img { max-width: 100%; max-height: calc(100vh - 6rem); max-height: calc(100dvh - 6rem); width: auto; height: auto; border-radius: 6px; background-color: #fff; background-size: 100% 100%; background-repeat: no-repeat; }
 .lb-nav { position: absolute; top: 50%; transform: translateY(-50%); }
 #lb-prev { left: 1rem; } #lb-next { right: 1rem; }
 @media (max-width: 40rem) {
